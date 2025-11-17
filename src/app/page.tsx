@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { FileText, Camera, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useEffect } from "react";
+import { requireGDriveAuth } from "./utils/getTokenAuth";
 
 export default function Linktree() {
   const links = [
@@ -21,6 +23,10 @@ export default function Linktree() {
     },
   ];
 
+  useEffect(() => {
+    requireGDriveAuth(); 
+  }, []);
+
   return (
     <main className="min-h-screen bg-linear-to-br from-[#1C1F24] via-[#2a2d32] to-[#1C1F24]">
       <div className="max-w-2xl mx-auto px-4 py-8 md:py-16">
@@ -38,7 +44,8 @@ export default function Linktree() {
             Hub Karang Taruna RW 02 Pekunden
           </h1>
           <p className="text-xs md:text-base text-[#F5E9D6]/70 text-balance">
-            Kelola semua kebutuhan Karang Taruna RW 02 Pekunden di satu tempat dengan mudah dan efisien, yang dapat diakses kapan saja
+            Kelola semua kebutuhan Karang Taruna RW 02 Pekunden di satu tempat
+            dengan mudah dan efisien, yang dapat diakses kapan saja
           </p>
         </div>
         <div className="grid gap-3 md:gap-4">
