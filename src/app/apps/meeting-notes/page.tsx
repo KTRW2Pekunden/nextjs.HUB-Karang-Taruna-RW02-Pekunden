@@ -64,16 +64,6 @@ export default function MeetingNotes() {
     fetchData();
   }, []);
 
-  const getCookie = (name: string): string | undefined => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      const rawValue = parts.pop()?.split(";").shift();
-      if (rawValue) return decodeURIComponent(rawValue.trim());
-    }
-    return undefined;
-  };
-
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
     setIsScrolled(target.scrollTop > 0);
@@ -266,11 +256,6 @@ export default function MeetingNotes() {
           </div>
           <button
             onClick={() => {
-              const token = getCookie("gdrive_refresh_token");
-              if (!token || token.length < 1) {
-                window.location.href = "/api/google-auth";
-                return;
-              }
               setShowForm(!showForm);
             }}
             className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg transition text-sm md:text-base font-medium"
