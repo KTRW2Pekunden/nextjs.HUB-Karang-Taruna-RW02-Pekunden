@@ -17,7 +17,7 @@ export const GET = async (req: Request) => {
     return NextResponse.json({ error: "No refresh token received" });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!
   const response = NextResponse.redirect(`${baseUrl}/`);
   response.cookies.set({
     name: "gdrive_refresh_token",
