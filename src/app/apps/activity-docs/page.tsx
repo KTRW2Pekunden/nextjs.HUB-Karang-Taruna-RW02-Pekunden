@@ -5,7 +5,7 @@ import {
   FolderPlus,
   Upload,
   ChevronRight,
-  Trash2, 
+  Trash2,
 } from "lucide-react";
 import { useActivityDocs } from "./hooks/useActivityDocs";
 import { ActivityFileList } from "./components/ActivityFileList";
@@ -33,7 +33,7 @@ export default function ActivityDocumentation() {
     handleFileUpload,
     handleRename,
     handleDelete,
-    handleBulkDelete, 
+    handleBulkDelete,
     handleItemClick,
     goBack,
     startRename,
@@ -197,7 +197,7 @@ export default function ActivityDocumentation() {
             )}
 
             {showNewFolder && (
-              <div className="mb-4 flex gap-2">
+              <div className="mb-4 flex max-sm:flex-col max-sm:gap-4 gap-2 md:items-center">
                 <input
                   type="text"
                   value={newFolderName}
@@ -218,32 +218,34 @@ export default function ActivityDocumentation() {
                     } as React.CSSProperties
                   }
                 />
-                <button
-                  onClick={handleCreateFolder}
-                  className="px-4 py-2 rounded-lg transition text-sm font-medium"
-                  style={{ backgroundColor: "#E77E4F", color: "#F5E9D6" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#d86d3f")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#E77E4F")
-                  }
-                >
-                  Buat
-                </button>
-                <button
-                  onClick={() => setShowNewFolder(false)}
-                  className="px-4 py-2 rounded-lg transition text-sm font-medium"
-                  style={{ backgroundColor: "#2a2e35", color: "#F5E9D6" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#3a3e45")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#2a2e35")
-                  }
-                >
-                  Batal
-                </button>
+                <div className="space-x-2">
+                  <button
+                    onClick={handleCreateFolder}
+                    className="px-4 py-2 rounded-lg transition text-sm font-medium"
+                    style={{ backgroundColor: "#E77E4F", color: "#F5E9D6" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#d86d3f")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#E77E4F")
+                    }
+                  >
+                    Buat
+                  </button>
+                  <button
+                    onClick={() => setShowNewFolder(false)}
+                    className="px-4 py-2 rounded-lg transition text-sm font-medium"
+                    style={{ backgroundColor: "#2a2e35", color: "#F5E9D6" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#3a3e45")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#2a2e35")
+                    }
+                  >
+                    Batal
+                  </button>
+                </div>
               </div>
             )}
 
