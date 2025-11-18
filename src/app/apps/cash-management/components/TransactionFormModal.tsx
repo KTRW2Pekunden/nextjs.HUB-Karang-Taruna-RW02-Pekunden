@@ -25,7 +25,7 @@ interface TransactionFormModalProps {
       description: string;
     }>
   >;
-  onSubmitTransaction: () => Promise<void>;
+  onSubmitTransaction: () => void;
   isEditing: boolean;
 }
 
