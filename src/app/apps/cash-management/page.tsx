@@ -32,7 +32,9 @@ const LoadingSpinner = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-[#1C1F24] via-[#2a2d32] to-[#1C1F24]">
     <div
       className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 mb-6"
-      style={{ borderColor: PRIMARY_COLOR + " transparent transparent transparent" }}
+      style={{
+        borderColor: PRIMARY_COLOR + " transparent transparent transparent",
+      }}
     ></div>
     <p className="text-lg font-medium" style={{ color: TEXT_SECONDARY }}>
       Memuat data kas...
@@ -45,7 +47,8 @@ export default function CashManagement() {
   const [currentBalance, setCurrentBalance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [editingTransaction, setEditingTransaction] =
+    useState<Transaction | null>(null);
   const [transactionDate, setTransactionDate] = useState(getTodayDate());
   const [newTransaction, setNewTransaction] = useState({
     type: "income" as "income" | "expense",
@@ -81,7 +84,11 @@ export default function CashManagement() {
   };
 
   const handleSubmit = async () => {
-    if (!transactionDate || newTransaction.amount <= 0 || !newTransaction.description.trim()) {
+    if (
+      !transactionDate ||
+      newTransaction.amount <= 0 ||
+      !newTransaction.description.trim()
+    ) {
       alert("Harap isi semua field dengan benar.");
       return;
     }
@@ -136,7 +143,10 @@ export default function CashManagement() {
 
   return (
     <main className="min-h-screen" style={{ backgroundColor: BG_MAIN }}>
-      <div className="sticky top-0 z-40 border-b" style={{ backgroundColor: BG_MAIN, borderColor: BORDER_COLOR }}>
+      <div
+        className="sticky top-0 z-40 border-b"
+        style={{ backgroundColor: BG_MAIN, borderColor: BORDER_COLOR }}
+      >
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
@@ -144,13 +154,22 @@ export default function CashManagement() {
               className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-opacity-10 transition"
               style={{ backgroundColor: `rgba(231, 126, 79, 0.1)` }}
             >
-              <ChevronLeft className="w-5 h-5" style={{ color: TEXT_PRIMARY }} />
+              <ChevronLeft
+                className="w-5 h-5"
+                style={{ color: TEXT_PRIMARY }}
+              />
             </Link>
             <div>
-              <h1 className="text-lg md:text-xl font-bold" style={{ color: TEXT_PRIMARY }}>
+              <h1
+                className="text-lg md:text-xl font-bold"
+                style={{ color: TEXT_PRIMARY }}
+              >
                 Pencatatan kas
               </h1>
-              <p className="text-xs md:text-sm" style={{ color: TEXT_SECONDARY }}>
+              <p
+                className="text-xs md:text-sm"
+                style={{ color: TEXT_SECONDARY }}
+              >
                 Kelola pemasukan dan pengeluaran Karang Taruna RW 02 Pekunden
               </p>
             </div>
@@ -162,8 +181,12 @@ export default function CashManagement() {
             }}
             className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg transition text-sm md:text-base font-medium"
             style={{ backgroundColor: PRIMARY_COLOR, color: TEXT_PRIMARY }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#d86d3f")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY_COLOR)}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#d86d3f")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = PRIMARY_COLOR)
+            }
           >
             <Plus className="w-4 h-4 md:w-5 md:h-5" />
             <span className="hidden sm:inline">Transaksi Baru</span>
@@ -172,17 +195,32 @@ export default function CashManagement() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="shadow-lg rounded-xl p-6 mb-8 border" style={{ backgroundColor: CARD_BG_COLOR, borderColor: BORDER_COLOR }}>
-          <h2 className="text-xl font-semibold" style={{ color: TEXT_SECONDARY }}>
+        <div
+          className="shadow-lg rounded-xl p-6 mb-8 border"
+          style={{ backgroundColor: CARD_BG_COLOR, borderColor: BORDER_COLOR }}
+        >
+          <h2
+            className="text-xl font-semibold"
+            style={{ color: TEXT_SECONDARY }}
+          >
             Saldo Kas Saat Ini:
           </h2>
-          <p className="text-4xl font-extrabold mt-2" style={{ color: currentBalance >= 0 ? "#81C784" : "#E57373" }}>
+          <p
+            className="text-4xl font-extrabold mt-2"
+            style={{ color: currentBalance >= 0 ? "#81C784" : "#E57373" }}
+          >
             {formatCurrency(currentBalance)}
           </p>
         </div>
 
-        <div className="shadow-lg rounded-xl p-6 border" style={{ backgroundColor: CARD_BG_COLOR, borderColor: BORDER_COLOR }}>
-          <h2 className="text-2xl font-semibold mb-4" style={{ color: TEXT_PRIMARY }}>
+        <div
+          className="shadow-lg rounded-xl p-6 border"
+          style={{ backgroundColor: CARD_BG_COLOR, borderColor: BORDER_COLOR }}
+        >
+          <h2
+            className="text-2xl font-semibold mb-4"
+            style={{ color: TEXT_PRIMARY }}
+          >
             Riwayat Transaksi
           </h2>
 
@@ -193,47 +231,74 @@ export default function CashManagement() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {transactions
-                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                )
                 .map((t) => (
                   <div
                     key={t.id}
                     className="p-4 rounded-lg shadow-sm border"
-                    style={{ backgroundColor: BG_MAIN, borderColor: BORDER_COLOR }}
+                    style={{
+                      backgroundColor: BG_MAIN,
+                      borderColor: BORDER_COLOR,
+                    }}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <p className="text-sm" style={{ color: TEXT_SECONDARY }}>
-                        {new Date(t.date).toLocaleDateString("id-ID")}
+                      <p
+                        className="text-sm font-mono"
+                        style={{ color: TEXT_SECONDARY }}
+                      >
+                        {t.date}
                       </p>
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(t)}
                           className="p-1 rounded-full hover:bg-opacity-20 transition"
                           style={{ backgroundColor: `rgba(231, 126, 79, 0.1)` }}
-                          title="Edit Transaksi"
+                          title="Edit"
                         >
-                          <Edit2 className="w-4 h-4" style={{ color: PRIMARY_COLOR }} />
+                          <Edit2
+                            className="w-4 h-4"
+                            style={{ color: PRIMARY_COLOR }}
+                          />
                         </button>
                         <button
                           onClick={() => handleDelete(t.id)}
                           className="p-1 rounded-full hover:bg-opacity-20 transition"
-                          style={{ backgroundColor: `rgba(229, 115, 115, 0.1)` }}
-                          title="Hapus Transaksi"
+                          style={{
+                            backgroundColor: `rgba(229, 115, 115, 0.1)`,
+                          }}
+                          title="Hapus"
                         >
-                          <Trash2 className="w-4 h-4" style={{ color: "#E57373" }} />
+                          <Trash2
+                            className="w-4 h-4"
+                            style={{ color: "#E57373" }}
+                          />
                         </button>
                       </div>
                     </div>
-                    <h3 className="text-lg font-medium mb-1" style={{ color: TEXT_PRIMARY }}>
+                    <h3
+                      className="text-lg font-medium mb-1"
+                      style={{ color: TEXT_PRIMARY }}
+                    >
                       {t.description}
                     </h3>
                     <p
-                      className={`text-xl font-bold ${t.type === "income" ? "text-green-500" : "text-red-500"}`}
-                      style={{ color: t.type === "income" ? "#81C784" : "#E57373" }}
+                      className={`text-xl font-bold ${
+                        t.type === "income" ? "text-green-500" : "text-red-500"
+                      }`}
+                      style={{
+                        color: t.type === "income" ? "#81C784" : "#E57373",
+                      }}
                     >
                       {t.type === "expense" ? "-" : "+"}{" "}
                       {formatCurrency(t.amount)}
                     </p>
-                    <p className="text-xs mt-2" style={{ color: TEXT_SECONDARY }}>
+                    <p
+                      className="text-xs mt-2"
+                      style={{ color: TEXT_SECONDARY }}
+                    >
                       Jenis:{" "}
                       <span className="font-semibold">
                         {t.type === "income" ? "Pemasukan" : "Pengeluaran"}
