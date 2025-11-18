@@ -2,23 +2,19 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Plus, ChevronLeft, ArrowRight } from "lucide-react";
-
 import Modal from "./components/Modal";
 import TimelineItem from "./components/TimelineItem";
 import MilestoneFormModal from "./components/MilestoneFormModal";
 import ProjectFormModal from "./components/ProjectFormModal";
 import ProjectDashboard from "./components/ProjectDashboard";
 import ProjectSummaryCard from "./components/projectSummary";
-
 import {
   getProjectsFromSheet,
   deleteMilestone,
   updateMilestoneStatus,
   deleteProjectFromSheet,
 } from "./lib/project-sheets-service";
-
 import { Project, Milestone } from "./types";
-
 import {
   MAX_WIDTH_CLASS,
   COLOR_BG_DARK,
@@ -30,17 +26,27 @@ import {
   COLOR_PRIMARY,
 } from "./constants";
 
+const LoadingSpinner = () => (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-[#1C1F24] via-[#2a2d32] to-[#1C1F24]">
+    <div
+      className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 mb-6"
+      style={{ borderColor: "#E77E4F transparent transparent transparent" }}
+    ></div>
+    <p className="text-lg font-medium" style={{ color: "#b8a88e" }}>
+      Memuat proyek...
+    </p>
+  </div>
+);
+
 export default function Page() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
-
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [currentEditingProject, setCurrentEditingProject] =
     useState<Project | null>(null);
-
   const [milestoneModalOpen, setMilestoneModalOpen] = useState(false);
   const [currentEditingMilestone, setCurrentEditingMilestone] =
     useState<Milestone | null>(null);
@@ -104,11 +110,9 @@ export default function Page() {
         )
       )
         return;
-
       try {
         await deleteProjectFromSheet(projectId);
         await loadProjects();
-
         if (selectedProjectId === projectId) {
           setSelectedProjectId(null);
         }
@@ -130,7 +134,6 @@ export default function Page() {
     async (milestoneId: string) => {
       if (!window.confirm("Apakah Anda yakin ingin menghapus milestone ini?"))
         return;
-
       try {
         await deleteMilestone(milestoneId);
         await loadProjects();
@@ -184,6 +187,8 @@ export default function Page() {
   }, []);
 
   const isTimelineView = !!selectedProjectId && !!selectedProject;
+
+  if (loadingInitial) return <LoadingSpinner />;
 
   return (
     <>
@@ -288,7 +293,6 @@ export default function Page() {
                 </p>
               </div>
             </div>
-
             <button
               onClick={
                 isTimelineView ? handleOpenAddMilestone : handleOpenAddProject
@@ -317,17 +321,7 @@ export default function Page() {
         </div>
 
         <div className={`${MAX_WIDTH_CLASS} py-6`}>
-          {loadingInitial ? (
-            <div className="flex flex-col items-center justify-center">
-              <div
-                className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4"
-                style={{ borderColor: "#E77E4F" }}
-              ></div>
-              <p className="text-sm" style={{ color: "#b8a88e" }}>
-                Memuat proyek...
-              </p>
-            </div>
-          ) : !selectedProjectId || !selectedProject ? (
+          {!selectedProjectId || !selectedProject ? (
             <ProjectDashboard
               projects={projects}
               onSelectProject={setSelectedProjectId}
@@ -337,14 +331,12 @@ export default function Page() {
           ) : (
             <>
               <ProjectSummaryCard project={selectedProject} />
-
               <h2
                 className="text-xl font-semibold mb-6"
                 style={{ color: COLOR_ACCENT }}
               >
                 Daftar Aktivitas ({sortedTimeline.length})
               </h2>
-
               <div className="relative">
                 {sortedTimeline.length > 0 ? (
                   sortedTimeline.map((item) => (
@@ -368,7 +360,6 @@ export default function Page() {
                     Tidak ada milestone di proyek ini. Silakan tambahkan satu!
                   </div>
                 )}
-
                 <div className="flex relative pl-8 pt-4">
                   <div
                     className="absolute w-4 h-4 rounded-full flex items-center justify-center p-1"

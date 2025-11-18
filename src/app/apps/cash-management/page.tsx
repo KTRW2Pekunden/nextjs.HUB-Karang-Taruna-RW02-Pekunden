@@ -35,7 +35,7 @@ const LoadingSpinner = () => (
       style={{ borderColor: PRIMARY_COLOR + " transparent transparent transparent" }}
     ></div>
     <p className="text-lg font-medium" style={{ color: TEXT_SECONDARY }}>
-      Memuat data transaksi...
+      Memuat data kas...
     </p>
   </div>
 );

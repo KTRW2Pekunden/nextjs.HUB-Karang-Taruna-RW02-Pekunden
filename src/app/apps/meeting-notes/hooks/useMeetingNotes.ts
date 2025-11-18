@@ -4,8 +4,12 @@ import {
   addMeetingNote,
   deleteMeetingNote,
   updateMeetingNote,
-} from "../lib/google-sheets-service"; 
-import { MeetingNote, ImageWithStatus, SheetRowData } from "../types/meetingTypes";
+} from "../lib/google-sheets-service";
+import {
+  MeetingNote,
+  ImageWithStatus,
+  SheetRowData,
+} from "../types/meetingTypes";
 
 export const useMeetingNotes = () => {
   const [meetingNotes, setMeetingNotes] = useState<MeetingNote[]>([]);
@@ -17,24 +21,26 @@ export const useMeetingNotes = () => {
   const [notes, setNotes] = useState("");
   const [images, setImages] = useState<ImageWithStatus[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const data: Record<string, string>[] = await getSheetDataByColumn();
-
       const mapped: MeetingNote[] = data.map((row, index) => ({
         id: (index + 2).toString(),
-        date: row["TANGGAL"],
-        startTime: row["WAKTU MULAI"],
-        endTime: row["WAKTU SELESAI"],
-        notulen: row["NOTULEN"],
-        docURL: row["LINK DOKUMENTASI"],
+        date: row["TANGGAL"] || "",
+        startTime: row["WAKTU MULAI"] || "",
+        endTime: row["WAKTU SELESAI"] || "",
+        notulen: row["NOTULEN"] || "",
+        docURL: row["LINK DOKUMENTASI"] || "",
       }));
-
       setMeetingNotes(mapped);
     } catch (error) {
       console.error("Error loading data:", error);
+      alert("Gagal memuat data notulen");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,7 +54,6 @@ export const useMeetingNotes = () => {
     if (!startTime) newErrors.startTime = "Jam mulai wajib diisi";
     if (!endTime) newErrors.endTime = "Jam selesai wajib diisi";
     if (!notes.trim()) newErrors.notes = "Isi notulen wajib diisi";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -58,7 +63,7 @@ export const useMeetingNotes = () => {
     if (!files) return;
     const newImages: ImageWithStatus[] = Array.from(files).map((file) => ({
       file,
-      status: "pending",
+      status: "pending" as const,
     }));
     setImages((prev) => [...prev, ...newImages]);
   };
@@ -91,36 +96,22 @@ export const useMeetingNotes = () => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsLoading(true);
-
     let folderURL = "";
+
     try {
-      // 1. Upload Images
       if (images.length > 0 && !editingId) {
         setImages((prev) =>
           prev.map((img) => ({ ...img, status: "uploading" }))
         );
-
         const formData = new FormData();
         images.forEach((img) => formData.append("files", img.file));
         formData.append("date", startDate);
-
         const res = await fetch("/api/meeting-notes/gdrive-upload", {
           method: "POST",
           body: formData,
         });
-
         const data = await res.json();
-        if (!res.ok) {
-          setImages((prev) =>
-            prev.map((img) => ({
-              ...img,
-              status: "error",
-              error: data.error || "Upload gagal",
-            }))
-          );
-          throw new Error(data.error || "Upload gagal");
-        }
-
+        if (!res.ok) throw new Error(data.error || "Upload gagal");
         folderURL = data.folderUrl;
         setImages((prev) => prev.map((img) => ({ ...img, status: "done" })));
       }
@@ -132,10 +123,10 @@ export const useMeetingNotes = () => {
       });
       const dataAI = await resAI.json();
       const formattedNotulen = dataAI.formattedNote ?? notes;
-      
+
       if (editingId) {
-        const existingNote = meetingNotes.find(n => n.id === editingId);
-        folderURL = existingNote?.docURL ?? folderURL;
+        const existing = meetingNotes.find((n) => n.id === editingId);
+        folderURL = existing?.docURL || folderURL;
       }
 
       const newNote: MeetingNote = {
@@ -155,13 +146,10 @@ export const useMeetingNotes = () => {
         "LINK DOKUMENTASI": newNote.docURL,
       };
 
-
       if (editingId) {
-        const rowNumber = Number(editingId);
-        await updateMeetingNote(rowNumber, sheetData);
-
+        await updateMeetingNote(Number(editingId), sheetData);
         setMeetingNotes((prev) =>
-          prev.map((note) => (note.id === editingId ? newNote : note))
+          prev.map((n) => (n.id === editingId ? newNote : n))
         );
       } else {
         await addMeetingNote(sheetData);
@@ -170,7 +158,6 @@ export const useMeetingNotes = () => {
 
       setShowForm(false);
       resetForm();
-
     } catch (err) {
       console.error("Submit error:", err);
       alert("Gagal menyimpan notulen");
@@ -181,20 +168,15 @@ export const useMeetingNotes = () => {
 
   const handleDelete = async (id: string, folderUrl: string) => {
     if (!confirm("Yakin ingin menghapus notulen ini?")) return;
-
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-
       if (folderUrl) {
-        const res = await fetch("/api/meeting-notes/gdrive-delete", {
+        await fetch("/api/meeting-notes/gdrive-delete", {
           method: "POST",
           body: JSON.stringify({ folderUrl }),
           headers: { "Content-Type": "application/json" },
         });
-        const data = await res.json();
-        if (!data.success) console.warn("Gagal hapus folder:", data.message);
       }
-
       await deleteMeetingNote(Number(id));
       setMeetingNotes((prev) => prev.filter((note) => note.id !== id));
     } catch (err) {
@@ -220,12 +202,8 @@ export const useMeetingNotes = () => {
     notes,
     setNotes,
     images,
-    setImages,
     errors,
-    setErrors,
     isLoading,
-    setIsLoading,
-    handleScroll: () => {}, 
     handleImageUpload,
     handleRemoveImage,
     handleEdit,

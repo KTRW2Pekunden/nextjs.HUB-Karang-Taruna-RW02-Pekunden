@@ -6,6 +6,18 @@ import { useMeetingNotes } from "./hooks/useMeetingNotes";
 import { MeetingNoteForm } from "./components/MeetingNoteForm";
 import { MeetingNoteList } from "./components/MeetingNoteList";
 
+const LoadingSpinner = () => (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-[#1C1F24] via-[#2a2d32] to-[#1C1F24]">
+    <div
+      className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 mb-6"
+      style={{ borderColor: "#E77E4F transparent transparent transparent" }}
+    ></div>
+    <p className="text-lg font-medium" style={{ color: "#b8a88e" }}>
+      Memuat notulen pertemuan...
+    </p>
+  </div>
+);
+
 export default function MeetingNotes() {
   const {
     meetingNotes,
@@ -37,6 +49,8 @@ export default function MeetingNotes() {
     setEditingId(null);
     setShowForm(true);
   };
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#1C1F24" }}>
@@ -102,7 +116,6 @@ export default function MeetingNotes() {
           isLoading={isLoading}
           handleSubmit={handleSubmit}
         />
-
         <MeetingNoteList
           meetingNotes={meetingNotes}
           handleEdit={handleEdit}
