@@ -1,11 +1,26 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 import Link from "next/link";
 import { FileText, Camera, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { requireGDriveAuth } from "./utils/getTokenAuth";
 
+const LoadingSpinner = () => (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-[#1C1F24] via-[#2a2d32] to-[#1C1F24]">
+    <div
+      className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4"
+      style={{ borderColor: "#E77E4F" }}
+    ></div>
+    <p className="text-sm" style={{ color: "#b8a88e" }}>
+      Memeriksa otentikasi...
+    </p>
+  </div>
+);
+
 export default function Linktree() {
+  const [isLoading, setIsLoading] = useState(true);
+
   const links = [
     {
       title: "Notulen Pertemuan",
@@ -24,8 +39,16 @@ export default function Linktree() {
   ];
 
   useEffect(() => {
-    requireGDriveAuth(); 
+    const token = requireGDriveAuth();
+
+    if (token !== undefined) {
+      setIsLoading(false);
+    }
   }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <main className="min-h-screen bg-linear-to-br from-[#1C1F24] via-[#2a2d32] to-[#1C1F24]">

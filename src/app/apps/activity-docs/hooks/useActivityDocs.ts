@@ -21,7 +21,7 @@ export const useActivityDocs = () => {
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
   const [uploadQueue, setUploadQueue] = useState<UploadingFile[]>([]);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]); // State untuk multi-select
+  const [selectedItems, setSelectedItems] = useState<string[]>([]); 
 
   const router = useRouter();
 
