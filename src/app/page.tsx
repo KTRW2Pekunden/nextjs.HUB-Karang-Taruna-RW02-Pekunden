@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 import Link from "next/link";
-import { FileText, Camera, ArrowRight } from "lucide-react";
+import { FileText, Camera, ArrowRight, CalendarClock } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { requireGDriveAuth } from "./utils/getTokenAuth";
@@ -34,6 +34,12 @@ export default function Linktree() {
       description: "Unggah foto dan dokumentasi kegiatan Karang Taruna",
       href: "apps/activity-docs",
       icon: Camera,
+      color: "from-[#E77E4F] to-[#d96e42]",
+    },{
+      title: "Timeline Proyek",
+      description: "Kelola dan pantau timeline proyek secara efisien.",
+      href: "apps/timeline",
+      icon: CalendarClock,
       color: "from-[#E77E4F] to-[#d96e42]",
     },
   ];
