@@ -3,9 +3,8 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Upload Notulen Rapat',
-  description: 'Sistem upload notulen rapat yang modern dan responsif untuk dokumentasi pertemuan kantor',
-  generator: 'v0.app',
+  title: 'HUB KT.RW 02 PEKUNDEN',
+  description: 'APP KARANG TARUNA RW 02 PEKUNDEN',
   icons: {
     icon: [
       {
